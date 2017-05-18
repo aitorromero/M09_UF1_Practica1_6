@@ -2,7 +2,6 @@ package m09_uf1_practica1_6;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -11,11 +10,10 @@ import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
+import java.security.SignatureException;
 import java.security.UnrecoverableKeyException;
-import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Enumeration;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -28,7 +26,7 @@ public class Destino {
     private KeyStore ksd; //desti.jks
     private PrivateKey kPrivDesti; //PrivateKey desti
     private PublicKey kPublDesti; //PublicKey desti 
-    private X509Certificate certPublOrigen; //Certificado origen - publicKey    
+    private X509Certificate certPublOrigen; //Certificado destino - publicKey    
     public byte[] decryptedData;
 
     public void loadKeyStore(String ksFile, String ksPwd) throws Exception {
@@ -38,6 +36,11 @@ public class Destino {
             FileInputStream in = new FileInputStream(f);
             ksd.load(in, ksPwd.toCharArray());
         }
+        
+        Enumeration<String> aliases = ksd.aliases();
+            while(aliases.hasMoreElements()){
+                System.out.println(aliases.nextElement());
+            }
     }
 
     public void getPko() throws KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException {
@@ -46,6 +49,7 @@ public class Destino {
 
     public void getCertificate(String alias) throws KeyStoreException {
         certPublOrigen = (X509Certificate) ksd.getCertificate(alias);
+        //System.out.println(certPublOrigen.getType());
     }
 
     public void getPublicKey() {
@@ -67,7 +71,7 @@ public class Destino {
             signer.initVerify(pub);
             signer.update(data);
             isValid = signer.verify(signature);
-        } catch (Exception ex) {
+        } catch (InvalidKeyException | NoSuchAlgorithmException | SignatureException ex) {
             System.out.println("Algo falla cabesa || ValidateSignature");
         }
         return isValid;

@@ -49,12 +49,12 @@ public class Origen {
         if (f.isFile()) {
             FileInputStream in = new FileInputStream(f);
             kso.load(in, ksPwd.toCharArray());
-            /*
+            
             Enumeration<String> aliases = kso.aliases();
             while(aliases.hasMoreElements()){
                 System.out.println(aliases.nextElement());
             }
-            */
+            
         }
     } 
 
@@ -77,6 +77,7 @@ public class Origen {
      */
     public void getCertificate(String alias) throws KeyStoreException {
         certPublDesti = (X509Certificate) kso.getCertificate(alias);
+        //System.out.println(certPublDesti.getType());
     }
 
     /**

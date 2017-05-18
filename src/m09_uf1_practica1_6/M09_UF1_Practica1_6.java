@@ -14,20 +14,21 @@ public class M09_UF1_Practica1_6 {
             /////////ORIGEN/////////
             o.loadKeyStore(o.origen, o.passwd);//Generamos el almacen de origen
             o.getPko();//Obtenemos la clave privada
-            o.getCertificate("desticert");//Obtenemos el certifidado de desti
+            o.getCertificate("desticert2");//Obtenemos el certifidado de desti
             o.getPublicKey();//Generamos la clave publica de origen
             
             /////////DESTINO/////////
             d.loadKeyStore(d.desti, d.passwd);//Generamos el almacen de desti
             d.getPko();//Obtenemos la clave privada
-            d.getCertificate("origen");
+            d.getCertificate("origencrt");
             d.getPublicKey();
             
-            o.xifraDadesEmissor(o.text, d.getPublKey());//Ciframos el texto en un array de bytes
+            o.xifraDadesEmissor(o.text, o.getPublKey());//Ciframos el texto en un array de bytes
             signature=o.signData(o.getMsgEncriptado(), o.getkPrivOrigen());//Array de bytes con la firma
             
             
             d.validateSignature(o.getMsgEncriptado(), signature, d.getPublKey());
+            d.desxifraDadesReceptor(o.getMsgEncriptado(), d.getkPrivDesti());
             System.out.println(new String(d.decryptedData));
             
         } catch (Exception ex) {
