@@ -53,8 +53,7 @@ public class Origen {
             Enumeration<String> aliases = kso.aliases();
             while(aliases.hasMoreElements()){
                 System.out.println(aliases.nextElement());
-            }
-            
+            }            
         }
     } 
 
